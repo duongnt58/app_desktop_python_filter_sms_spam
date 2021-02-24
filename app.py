@@ -2,16 +2,41 @@
 from dearpygui.core import *
 from dearpygui.simple import *
 
-def check_spam(sender, data, pred=[]):
+# Sms Spam Filter Import
+# import random
+# import pandas as pd
+# import string
+# import nltk
+# nltk.download('punkt')
+# nltk.download('stopwords')
+
+# Functions Import
+from functions import categorize_words, predict, pre_process
+
+pred = []
+
+def check_spam(pred=[]):
     with window("Simple SMS Spam Filter"):
+        print(pred)
         if pred == []:
+            add_spacing(count=12)
+            add_separator()
+            add_spacing(count=12)
             input_value = get_value("Input")
-            # pred.append(input_value)
-            print("Scenarion #1: " + input_value)
+            input_value = pre_process(input_value)
+            pred_text, text_color = predict(input_value)
+
+            pred.append(pred_text)
+            add_text (pred[-1], color=text_color)
         else: 
+            hide_item(pred[-1])
             input_value = get_value("Input")
-            # pred.append(input_value)
-            print("Scenarion #2: " + input_value)
+            input_value = pre_process(input_value)
+            pred_text, text_color = predict(input_value)
+
+            pred.append(pred_text)
+            add_text (pred[-1], color=text_color)
+
     
 
 # windown object setting
@@ -31,7 +56,7 @@ with window("Simple SMS Spam Filter", width=520, height=677):
     add_spacing(count=12)
     add_input_text("Input", width=415, default_value="type message here!")
     add_spacing(count=12)
-    add_button("Check", callback=check_spam)
+    add_button("Check", callback=lambda x,y:check_spam(pred))
 
 draw_image("logo", "logo_spamFilter.png", [0,0], [458,192])
 start_dearpygui()
